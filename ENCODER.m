@@ -1,29 +1,20 @@
 function ENCODER(input)
-
 lengthOfString = strlength(input);
 convertToChar = char(input);
-outputString = "";
-encodedString = "";
-for i = 1:lengthOfString
-    indexedLetter= convertToChar(i:i);
-    if indexedLetter == 'A'
-        encodedChar = '00';
-    elseif indexedLetter == 'B'
-        encodedChar = '0';
-    elseif indexedLetter == 'C'
-        encodedChar = '1';
-    elseif indexedLetter == 'D'
-        encodedChar = '01';
-    elseif indexedLetter == 'E'
-        encodedChar = '10';
-    elseif indexedLetter == 'F'
-        encodedChar = '11';
-    end 
-    encodedString = string(encodedChar);
-    outputString = outputString + encodedString;   
+[uniqueLetters,~] = unique(convertToChar);
+lengthOfUniqueLetters = length(uniqueLetters);
+countUniqueLettersArray = [];
+for j = 1:lengthOfUniqueLetters
+    countUniqueLetters = count(convertToChar,uniqueLetters(j));
+    countUniqueLettersArray = [countUniqueLettersArray countUniqueLetters];
 end
-disp(outputString);
+letterProbability = countUniqueLettersArray ./ lengthOfString;
+for i = 1:lengthOfString
+    indexedLetter = convertToChar(i:i);
+end
 
+
+return
 
 
 
