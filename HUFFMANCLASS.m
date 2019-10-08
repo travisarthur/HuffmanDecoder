@@ -33,6 +33,7 @@ classdef HUFFMANCLASS
                 convertToChar = char(inputString);
                 [uniqueLetters,~] = unique(convertToChar);
                 lengthOfUniqueLetters = length(uniqueLetters);
+                image.lengthOfUniqueLetters = lengthOfUniqueLetters;
                 countUniqueLettersArray = [];
                 uniqueLettersCell = {};
                 inputStringCell = cell(1,lengthOfString);
@@ -41,7 +42,8 @@ classdef HUFFMANCLASS
                     countUniqueLettersArray = [countUniqueLettersArray countUniqueLetters];
                     uniqueLettersCell{1,j} = uniqueLetters(j);
                 end
-                letterProbability = countUniqueLettersArray ./ lengthOfString; %gets Probability of unique letter in string
+                letterProbability = countUniqueLettersArray ./ lengthOfString %gets Probability of unique letter in string
+                image.probability = letterProbability;
                 for k = 1:lengthOfString
                     inputStringCell{k} = convertToChar(k); % Preserves input for dictionary
                 end
@@ -108,6 +110,12 @@ classdef HUFFMANCLASS
                     end
                 end
             end
+        end
+        function calculations = entropyCalculation(dictionary)
+            lengthOfRespectiveBinary = cellfun('length',dictionary.binaryKey);
+            avgLengthOfBinary = sum(lengthOfRespectiveBinary)./dictionary.lengthOfUniqueLetters;
+            calculations.entropy = -sum(dictionary.probability .* log2(dictionary.probability));
+            calculations.efficiency = calculations.entropy ./ avgLengthOfBinary; 
         end
     end
 end
