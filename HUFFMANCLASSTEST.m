@@ -8,9 +8,9 @@ classdef HUFFMANCLASSTEST
                 map{i} = i;          
             end
             while (letterProbability < 1) 
-                [~, colPosition] = sort(letterProbability); % Gets col index for probabilities
+                [~, colPosition] = sort(letterProbability);% Gets col index for probabilities                
                 lastIndex = colPosition(1);
-                secondToLastIndex = colPosition(2);            
+                secondToLastIndex = colPosition(2);         
                 onesGroup = map{lastIndex}; % Assigns priority to probabilities
                 zerosGroup = map{secondToLastIndex};         
                 lastProbability = letterProbability(lastIndex);  
@@ -28,11 +28,13 @@ classdef HUFFMANCLASSTEST
             image.binaryKey = key;
             image.input = inputStringCell;
             
+            
             function letterProbability = getLetterProbability(inputString)
                 lengthOfString = strlength(inputString);
                 convertToChar = char(inputString);
                 [uniqueLetters,~] = unique(convertToChar);
                 lengthOfUniqueLetters = length(uniqueLetters);
+                image.lengthOfUniqueLetters = lengthOfUniqueLetters;
                 countUniqueLettersArray = [];
                 uniqueLettersCell = {};
                 inputStringCell = cell(1,lengthOfString);
@@ -42,6 +44,7 @@ classdef HUFFMANCLASSTEST
                     uniqueLettersCell{1,j} = uniqueLetters(j);
                 end
                 letterProbability = countUniqueLettersArray ./ lengthOfString; %gets Probability of unique letter in string
+                image.probability = letterProbability;
                 for k = 1:lengthOfString
                     inputStringCell{k} = convertToChar(k); % Preserves input for dictionary
                 end
@@ -69,7 +72,7 @@ classdef HUFFMANCLASSTEST
                 encodedOutput = strcat(encodedOutput,holderEncodedOutput); % Combines the binary string
                 inputFromDictionary = inputFromDictionary(2:end); %Removes a letter until the cell is empty
             end  
-        end
+      end
         
         function decodedOutput = decoder(encodedInput,dictionary)
             
@@ -108,6 +111,14 @@ classdef HUFFMANCLASSTEST
                     end
                 end
             end
+        end
+        
+        function calculations = entropyCalculation(dictionary)
+            lengthOfRespectiveBinary = cellfun('length',dictionary.binaryKey);
+            avgLengthOfBinary = sum(lengthOfRespectiveBinary)./dictionary.lengthOfUniqueLetters;
+            calculations.entropy = -sum(dictionary.probability .* log2(dictionary.probability));
+            calculations.efficiency = calculations.entropy ./ avgLengthOfBinary;
+            
         end
     end
 end
